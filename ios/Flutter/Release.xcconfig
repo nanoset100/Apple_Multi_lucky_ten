@@ -1,0 +1,4 @@
+#include "Generated.xcconfig"
+IPHONEOS_DEPLOYMENT_TARGET = 13.0
+SUPPORTED_PLATFORMS = iphoneos
+TARGETED_DEVICE_FAMILY = 1,2
