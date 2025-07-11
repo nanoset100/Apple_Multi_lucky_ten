@@ -31,7 +31,4 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration
-        name: apple_connect    # Codemagic에 등록된 실제 integration 이름으로 교체
-        app_id: $APP_STORE_APP_ID
-        bundle_id: $BUNDLE_ID
-        team_id: $TEAM_ID
+        submit_to_app_store: true
