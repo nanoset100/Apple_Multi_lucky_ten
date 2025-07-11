@@ -3,6 +3,8 @@ workflows:
   ios-release:
     name: iOS Release Build
     max_build_duration: 60
+    integrations:
+      app_store_connect: codemagic   # ⚠️ 실제 Integration 이름과 정확히 일치해야 합니다
     environment:
       flutter: stable
       xcode: latest
@@ -11,7 +13,6 @@ workflows:
         XCODE_WORKSPACE: "Runner.xcworkspace"
         XCODE_SCHEME: "Runner"
         BUNDLE_ID: "com.nanoset.luckyTenCommandmentsFresh"
-        APP_STORE_APP_ID: "<앱스토어 App ID 입력>"
         TEAM_ID: "NC89740GV4"
       groups:
         - supabase
@@ -31,4 +32,3 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration
-        submit_to_app_store: true
