@@ -12,6 +12,7 @@ workflows:
         BUNDLE_ID: "com.nanoset.fortune10"
         APP_STORE_APP_ID: "<App Store App ID (선택)>"
       groups:
+        - supabase
         - app_store_connect_api_key
     triggering:
       events:
@@ -44,3 +45,4 @@ workflows:
         private_key: $APP_STORE_CONNECT_PRIVATE_KEY
         submit_to_testflight: true
         submit_to_app_store: false
+
