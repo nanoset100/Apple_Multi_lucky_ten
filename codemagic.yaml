@@ -1,65 +1,49 @@
 # Codemagic 워크플로우 설정 - App Store 제출용 IPA 빌드
 workflows:
-  ios-workflow:
-    name: iOS Workflow
+  ios-release:
+    name: iOS Release Build
+    max_build_duration: 60
     environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      vars:
+        XCODE_WORKSPACE: "Runner.xcworkspace"
+        XCODE_SCHEME: "Runner"
+        BUNDLE_ID: "com.nanoset.luckyTenCommandmentsFresh"
+        APP_STORE_APP_ID: "<App Store App ID (선택)>"
       groups:
         - supabase
         - app_store_connect_api_key
-      flutter: stable
-      xcode: latest
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.nanoset.luckyTenCommandmentsFresh
-
-    cache:
-      cache_paths:
-        - $FLUTTER_ROOT/.pub-cache
-        - $HOME/.gradle/caches
-
+    triggering:
+      events:
+        - push
     scripts:
-      - name: Set up code signing
-        script: |
-          keychain initialize
-
-      - name: Create .env file
+      - name: 🔧 Set up environment
         script: |
           echo "SUPABASE_URL=${SUPABASE_URL}" > .env
           echo "SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}" >> .env
-
-      - name: Install dependencies
+      - name: 📦 Install dependencies
+        script: |
+          flutter pub get
+      - name: 🧹 Clean
         script: |
           flutter clean
-          flutter pub get
-
-      - name: iOS Clean Build
-        script: |
-          rm -rf ios/Pods
-          rm -rf ios/.symlinks
-          rm -rf ios/Flutter/Flutter.framework
-          rm -rf ios/Flutter/Flutter.podspec
-          rm -f ios/Podfile.lock
-          flutter pub get
-          cd ios && pod install --repo-update && cd ..
-
-      - name: Build IPA
+      - name: 🔨 Build IPA
         script: |
           flutter build ipa --release --export-options-plist=ios/ExportOptions.plist
-
     artifacts:
       - build/ios/ipa/*.ipa
-      - /tmp/xcodebuild_logs/*.log
-
+    signing:
+      automatic_signing:
+        team_id: NCB9774DGY
+        app_store_connect:
+          api_key: $APP_STORE_CONNECT_PRIVATE_KEY
     publishing:
       app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        auth: api_key
+        api_key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        private_key: $APP_STORE_CONNECT_PRIVATE_KEY
         submit_to_testflight: true
-
-      email:
-        recipients:
-          - your-email@example.com  # 실제 이메일 주소로 변경
-        notify:
-          success: true
-          failure: true
+        submit_to_app_store: false

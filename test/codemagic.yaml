@@ -29,14 +29,7 @@ workflows:
           flutter build ipa --release --export-options-plist=ExportOptions.plist
     artifacts:
       - build/ios/ipa/*.ipa
-    signing:
-      ios_signing:
-        distribution_certificate:
-          certificate_reference: lucky10_p12_cert
-          certificate_password: $P12_CERT_PASSWORD
-        provisioning_profiles:
-          - bundle_id: com.nanoset.luckyTenCommandmentsFresh
-            profile_reference: lucky10_fresh_profile
+
     publishing:
       app_store_connect:
         auth: api_key
