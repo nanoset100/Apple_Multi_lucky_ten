@@ -4,17 +4,13 @@ workflows:
     name: iOS Workflow
     environment:
       groups:
-        - supabase                        # ← Supabase 환경 변수 그룹
-        - app_store_connect_api_key      # ← App Store Connect 키 관련 변수 그룹
+        - supabase
+        - app_store_connect_api_key
       flutter: stable
       xcode: latest
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.nanoset.luckyTenCommandmentsFresh
-
-    signing:
-      automatic_signing:
-        provisioning_profile_download: true
 
     cache:
       cache_paths:
@@ -64,4 +60,4 @@ workflows:
 
       email:
         recipients:
-          - your-email@example.com  # ← 실제 이메일 주소로 변경
+          - your-email@example.com  # 실제 이메일 주소로 변경
