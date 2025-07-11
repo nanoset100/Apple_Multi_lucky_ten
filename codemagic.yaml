@@ -11,8 +11,8 @@ workflows:
         XCODE_WORKSPACE: "Runner.xcworkspace"
         XCODE_SCHEME: "Runner"
         BUNDLE_ID: "com.nanoset.luckyTenCommandmentsFresh"
-        APP_STORE_APP_ID: "<App Store App ID (선택)>"
-        TEAM_ID: "NCB9774DGY"
+        APP_STORE_APP_ID: "<앱스토어 App ID 입력>"
+        TEAM_ID: "NC89740GV4"
       groups:
         - supabase
         - app_store_connect_api_key
@@ -20,21 +20,18 @@ workflows:
       events:
         - push
     scripts:
-      - name: 📦 Install dependencies
+      - name: Install dependencies
         script: |
           flutter pub get
-      - name: 🧹 Clean
+      - name: Build IPA
         script: |
-          flutter clean
-      - name: 🔨 Build IPA
-        script: |
-          flutter build ipa --release --export-options-plist=ExportOptions.plist
+          flutter build ipa --release --no-codesign
     artifacts:
       - build/ios/ipa/*.ipa
     publishing:
       app_store_connect:
-        auth: api_key
-        api_key_id: $APP_STORE_KEY_ID
-        issuer_id: $APP_STORE_ISSUER_ID
-        private_key: $APP_STORE_PRIVATE_KEY
-        submit_to_app_store: true
+        auth: integration
+        name: apple_connect    # Codemagic에 등록된 실제 integration 이름으로 교체
+        app_id: $APP_STORE_APP_ID
+        bundle_id: $BUNDLE_ID
+        team_id: $TEAM_ID
