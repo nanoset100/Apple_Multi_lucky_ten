@@ -21,6 +21,9 @@ workflows:
       events:
         - push
     scripts:
+      - name: Set up .env file
+        script: |
+          echo "$ENV_FILE" > .env
       - name: Install dependencies
         script: |
           flutter pub get
