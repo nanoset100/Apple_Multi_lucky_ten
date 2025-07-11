@@ -6,13 +6,8 @@
   <string>app-store</string>
   <key>teamID</key>
   <string>NCB9774DGY</string>
-  <key>provisioningProfiles</key>
-  <dict>
-    <key>com.nanoset.luckyTenCommandmentsFresh</key>
-    <string>Lucky10App_Prod_Profile</string>
-  </dict>
   <key>signingStyle</key>
-  <string>manual</string>
+  <string>automatic</string>
   <key>stripSwiftSymbols</key>
   <true/>
   <key>compileBitcode</key>

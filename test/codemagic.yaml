@@ -34,8 +34,8 @@ workflows:
           certificate_reference: lucky10_p12_cert
           certificate_password: $P12_CERT_PASSWORD
         provisioning_profiles:
-          - bundle_id: com.nanoset.fortune10
-            profile_reference: lucky10_prov_profile
+          - bundle_id: com.nanoset.luckyTenCommandmentsFresh
+            profile_reference: lucky10_fresh_profile
     publishing:
       app_store_connect:
         auth: api_key
