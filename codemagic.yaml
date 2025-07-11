@@ -16,6 +16,8 @@ workflows:
       groups:
         - supabase
         - app_store_connect_integration
+    integrations:
+      app_store_connect: codemagic
     triggering:
       events:
         - push
