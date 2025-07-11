@@ -1,61 +1,46 @@
-# Codemagic 워크플로우 설정 - iOS 12.0 Target Device Version으로 최적화 완료
 workflows:
-  ios-workflow:
-    name: iOS Workflow
+  ios-release:
+    name: iOS Release Build
+    max_build_duration: 60
     environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      vars:
+        XCODE_WORKSPACE: "Runner.xcworkspace"
+        XCODE_SCHEME: "Runner"
+        BUNDLE_ID: "com.nanoset.fortune10"
+        APP_STORE_APP_ID: "<App Store App ID (선택)>"
       groups:
-        - supabase
-      # Xcode와 Flutter 버전 설정
-      xcode: latest        # ← 최신 Xcode 사용
-      flutter: stable      # ← 안정 버전 Flutter 사용
-      # ios_signing:
-        # # iOS 서명 설정 (필요에 따라 구성)
-        # distribution_type: development
-        # bundle_identifier: com.example.luckyTenCommandmentsFresh
-    cache:
-      cache_paths:
-        - $FLUTTER_ROOT/.pub-cache  # Flutter 패키지 캐시
-        - $HOME/.gradle/caches       # Android Gradle 캐시 (필요시)
+        - app_store_connect_api_key
+    triggering:
+      events:
+        - push
     scripts:
-      - name: Create .env file from environment variables
+      - name: 📦 Install dependencies
         script: |
-          echo "SUPABASE_URL=${SUPABASE_URL}" > .env
-          echo "SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}" >> .env
-      - name: Set up code signing
+          flutter pub get
+      - name: 🧹 Clean
         script: |
-          # 코드 서명 설정 초기화
-          keychain initialize
-          
-      - name: Flutter packages get
-        script: |
-          # Flutter 환경 완전 초기화
           flutter clean
-          flutter pub get
-          
-      - name: iOS Clean Build (완전한 클린 빌드)
+      - name: 🔨 Build IPA
         script: |
-          # iOS 관련 모든 캐시 삭제
-          rm -rf ios/Pods
-          rm -rf ios/.symlinks
-          rm -rf ios/Flutter/Flutter.framework
-          rm -rf ios/Flutter/Flutter.podspec
-          rm -f ios/Podfile.lock
-          
-          # Flutter 재설정
-          flutter pub get
-          
-          # iOS Pod 설치 (iOS 12.0 타겟으로 설정됨)
-          cd ios && pod install --repo-update && cd ..
-          
-      - name: Build iOS
-        script: |
-          # iOS 빌드 실행 (iOS 12.0 타겟으로 설정 완료)
-          flutter build ios --release --no-codesign --verbose
-          
+          flutter build ipa --release --export-options-plist=ExportOptions.plist
     artifacts:
-      - build/ios/iphoneos/Runner.app
-      - /tmp/xcodebuild_logs/*.log
+      - build/ios/ipa/*.ipa
+    signing:
+      ios_signing:
+        distribution_certificate:
+          certificate_reference: lucky10_p12_cert
+          certificate_password: $P12_CERT_PASSWORD
+        provisioning_profiles:
+          - bundle_id: com.nanoset.fortune10
+            profile_reference: lucky10_prov_profile
     publishing:
-      email:
-        recipients:
-          - your-email@example.com  # ← 실제 이메일 주소로 변경 
+      app_store_connect:
+        auth: api_key
+        api_key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        private_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        submit_to_testflight: true
+        submit_to_app_store: false
