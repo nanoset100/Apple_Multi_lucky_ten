@@ -34,5 +34,4 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration
-        app_id: $APP_STORE_APP_ID
         submit_to_app_store: true
