@@ -4,7 +4,7 @@ workflows:
     name: iOS Release Build
     max_build_duration: 60
     integrations:
-      app_store_connect: LuckyTenAPI   # ⚠️ 실제 Integration 이름과 정확히 일치해야 합니다
+      app_store_connect: LuckyTenAPI   # ⚠️ 실제 Integration 이름과 정확히 일치해야 함
     environment:
       flutter: stable
       xcode: latest
@@ -18,12 +18,11 @@ workflows:
         - supabase
         - app_store_connect_api_key
         - ios_credentials
-
-    code_signing:
-      certificate: $CERTIFICATE
-      certificate_private_key: $CERTIFICATE_PRIVATE_KEY
-      certificate_password: $CERTIFICATE_PASSWORD  
-      provisioning_profile: $PROVISIONING_PROFILE
+      code_signing:
+        certificate: $CERTIFICATE
+        certificate_private_key: $CERTIFICATE_PRIVATE_KEY
+        certificate_password: $CERTIFICATE_PASSWORD  
+        provisioning_profile: $PROVISIONING_PROFILE
 
     triggering:
       events:
