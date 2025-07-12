@@ -38,11 +38,11 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_dotenv: ^5.2.1
   logger: ^2.5.0
+  flutter_launcher_icons: ^0.14.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.13.1
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -115,3 +115,9 @@ flutter_launcher_icons:
   macos:
     generate: true
     image_path: "assets/images/app_icon.png"
+
+flutter_icons:
+  android: false
+  ios: true
+  image_path_ios: "assets/images/app_icon.png"
+  remove_alpha_ios: true

@@ -17,6 +17,7 @@ workflows:
       groups:
         - supabase
         - app_store_connect_api_key
+        - ios_credentials
     triggering:
       events:
         - push
@@ -29,7 +30,7 @@ workflows:
           flutter pub get
       - name: Build IPA
         script: |
-          flutter build ipa --release --no-codesign
+          flutter build ipa --release
     artifacts:
       - build/ios/ipa/*.ipa
     publishing:
