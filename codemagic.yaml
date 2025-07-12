@@ -18,11 +18,6 @@ workflows:
         - supabase
         - app_store_connect_api_key
         - ios_credentials
-      code_signing:
-        certificate: $CERTIFICATE
-        certificate_private_key: $CERTIFICATE_PRIVATE_KEY
-        certificate_password: $CERTIFICATE_PASSWORD  
-        provisioning_profile: $PROVISIONING_PROFILE
 
     triggering:
       events:
