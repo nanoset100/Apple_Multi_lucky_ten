@@ -1,10 +1,9 @@
-# Codemagic 워크플로우 설정 - App Store 제출용 IPA 빌드
 workflows:
   ios-release:
     name: iOS Release Build
     max_build_duration: 60
     integrations:
-      app_store_connect: LuckyTenAPI   # ⚠️ 실제 Integration 이름과 정확히 일치해야 함
+      app_store_connect: LuckyTenAPI
     environment:
       flutter: stable
       xcode: latest
@@ -13,11 +12,11 @@ workflows:
         XCODE_WORKSPACE: "Runner.xcworkspace"
         XCODE_SCHEME: "Runner"
         BUNDLE_ID: "com.nanoset.luckyTenCommandmentsFresh"
-        TEAM_ID: "NC89740GV4"
+        # TEAM_ID: "NC89740GV4"  # 자동 서명 시 생략 가능
       groups:
         - supabase
-        - app_store_connect_api_key
-        - ios_credentials
+        - app_store_connect_api_key # 변수 그룹 이름은 일관성 있게 사용
+        # - ios_credentials # 수동 서명 파일 그룹이므로 자동 서명 시 불필요
 
     triggering:
       events:
@@ -30,14 +29,15 @@ workflows:
       - name: Install dependencies
         script: |
           flutter pub get
-      - name: Build IPA
-        script: |
-          flutter build ipa --release
+    
+    flutter-build: # 'flutter build ipa' 명령어를 대체
+      platform: ios
 
     artifacts:
       - build/ios/ipa/*.ipa
 
     publishing:
+      automatic_code_signing:
+        method: app_store_connect
       app_store_connect:
-        auth: integration
-        submit_to_testflight: true
+        submit_to_testflight: true # 빌드 후 TestFlight에 자동 업로드
