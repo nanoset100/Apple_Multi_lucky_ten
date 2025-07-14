@@ -4,7 +4,7 @@ workflows:
     name: iOS Release Build
     max_build_duration: 60
     integrations:
-      app_store_connect: LuckyTenAPI # Codemagic 'Integrations'에 설정한 API 키 이름
+      app_store_connect: LuckyTenAPI
 
     environment:
       flutter: stable
@@ -14,12 +14,8 @@ workflows:
         XCODE_WORKSPACE: "Runner.xcworkspace"
         XCODE_SCHEME: "Runner"
         BUNDLE_ID: "com.nanoset.luckyTenCommandmentsFresh"
-        TEAM_ID: "NC89740GV4" # 자동 서명 시 생략 가능하지만, 명시해도 문제없습니다.
       groups:
-        - supabase # Supabase 관련 환경 변수 그룹
-        # 아래 두 그룹은 자동 서명 시 직접 사용되진 않지만, 관련 정보를 모아두는 용도로 유지 가능합니다.
-        - app_store_connect_api_key 
-        - ios_credentials
+        - supabase
 
     triggering:
       events:
@@ -39,13 +35,9 @@ workflows:
     artifacts:
       - build/ios/ipa/*.ipa
 
-    # ✅ 앱 서명 및 App Store Connect 배포 설정
     publishing:
-      # 1. 자동 코드 서명 설정
       automatic_code_signing:
-        method: app_store_connect # App Store Connect API 키를 사용해 서명
-
-      # 2. App Store Connect 업로드 설정
+        method: app_store_connect
       app_store_connect:
-        api_key_integration_name: LuckyTenAPI # 사용할 API 키를 integrations에 설정된 이름으로 명시
-        submit_to_testflight: true           # 빌드 성공 시 TestFlight에 자동으로 업로드
+        api_key_integration_name: LuckyTenAPI
+        submit_to_testflight: true
