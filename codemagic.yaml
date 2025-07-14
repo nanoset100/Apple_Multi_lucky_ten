@@ -3,20 +3,18 @@ workflows:
   ios-release:
     name: iOS Release Build
     max_build_duration: 60
-    
-    # API 키 연동 (이 부분은 올바르게 설정되어 있었습니다)
-    integrations:
-      app_store_connect: LuckyTenAPI
 
-    # 빌드 환경
     environment:
       flutter: stable
       xcode: latest
       cocoapods: default
+      # --- 이 아랫부분에 번들 ID를 직접 지정합니다 ---
+      vars:
+        BUNDLE_ID: "com.nanoset.LuckyTenCommandmentsFresh"
       groups:
-        - supabase 
+        - supabase
+        - codemagic_secrets # 방금 만든 비밀키 그룹
 
-    # 빌드 스크립트
     scripts:
       - name: Clean Xcode signing settings
         script: | 
@@ -30,18 +28,16 @@ workflows:
           flutter pub get
       - name: Build IPA with release mode
         script: | 
-          flutter build ipa --release
+          flutter build ipa --release --build-name=1.0.0 --build-number=1
 
-    # 빌드 결과물
     artifacts:
       - build/ios/ipa/*.ipa
 
-    # --- 이 아랫부분이 오류를 해결한 최종 publishing 섹션입니다 ---
     publishing:
-      # 이 블록 하나로 서명과 업로드를 모두 처리합니다.
       app_store_connect:
-        # 1. 인증 정보: integrations에 있는 API 키를 사용하라고 명시합니다.
-        api_key_integration_name: LuckyTenAPI
+        # --- 환경 변수에서 인증 정보를 직접 가져와 사용 ---
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        key_id: $APP_STORE_CONNECT_KEY_ID
+        private_key: $APP_STORE_CONNECT_PRIVATE_KEY
 
-        # 2. TestFlight 업로드 설정
         submit_to_testflight: true
