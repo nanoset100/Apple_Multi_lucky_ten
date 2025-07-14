@@ -39,7 +39,9 @@ workflows:
       - build/ios/ipa/*.ipa
 
     publishing: # <--- 이 부분을 스크립트(scripts) 섹션 아래에 추가하세요.
-      automatic_code_signing:
+      automatic_code_signing: # 첫 번째 항목
         method: app_store_connect
-      app_store_connect:
-        submit_to_testflight: true   
+    
+      app_store_connect: # 두 번째 항목 (같은 레벨)
+        api_key_integration_name: LuckyTenAPI # <-- 여기에 Integration 이름을 명시
+        submit_to_testflight: true
