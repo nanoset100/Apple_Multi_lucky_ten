@@ -1,43 +1,16 @@
-# Codemagic 워크플로우 설정 - App Store 제출용 IPA 빌드
 workflows:
   ios-release:
-    name: iOS Release Build
-    max_build_duration: 60
-    integrations:
-      app_store_connect: LuckyTenAPI
-
+    name: iOS Build Test
     environment:
       flutter: stable
       xcode: latest
       cocoapods: default
-      vars:
-        XCODE_WORKSPACE: "Runner.xcworkspace"
-        XCODE_SCHEME: "Runner"
-        BUNDLE_ID: "com.nanoset.luckyTenCommandmentsFresh"
-      groups:
-        - supabase
-
-    triggering:
-      events:
-        - push
-
     scripts:
-      - name: Set up .env file
-        script: | 
-          echo "$ENV_FILE" > .env
       - name: Install dependencies
         script: | 
           flutter pub get
-      - name: Build IPA
+      - name: Run build command
         script: | 
-          flutter build ipa --release
-
+          flutter build ios --release --no-codesign
     artifacts:
       - build/ios/ipa/*.ipa
-
-    publishing:
-      automatic_code_signing:
-        method: app_store_connect
-      app_store_connect:
-        api_key_integration_name: LuckyTenAPI
-        submit_to_testflight: true
