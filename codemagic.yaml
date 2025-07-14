@@ -12,7 +12,7 @@ workflows:
         BUNDLE_ID: "com.nanoset.LuckyTenCommandmentsFresh"
       groups:
         - supabase
-        - appstore_credentials 
+        - codemagic_secrets # APP_STORE_PASSWORD가 포함된 그룹
 
     scripts:
       - name: Clean Xcode signing settings
@@ -32,9 +32,12 @@ workflows:
     artifacts:
       - build/ios/ipa/*.ipa
 
+    # --- 이 아랫부분이 Apple ID/앱 암호 방식으로 변경된 최종 publishing 섹션입니다 ---
     publishing:
       app_store_connect:
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER # 이 이름이 남아있는 변수와 일치합니다.
-        private_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        # 1. 인증 정보: API 키 대신 Apple ID와 앱 암호를 직접 사용합니다.
+        apple_id: nanoset@naver.com
+        password: "@env:APP_STORE_PASSWORD" 
+
+        # 2. TestFlight 업로드 설정
         submit_to_testflight: true
