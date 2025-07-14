@@ -19,9 +19,9 @@ workflows:
 
     # 빌드 스크립트
     scripts:
-      - name: Clean Xcode signing settings
-        script: | 
-          xcode-project remove-code-signing
+     #   - name: Clean Xcode signing settings
+     #   script: | 
+     #     xcode-project remove-code-signing
       - name: Set up .env file
         script: | 
           echo "SUPABASE_URL=$SUPABASE_URL" > .env
