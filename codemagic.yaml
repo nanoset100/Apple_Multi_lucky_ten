@@ -8,10 +8,8 @@ workflows:
       flutter: stable
       xcode: latest
       cocoapods: default
-      # --- 이 아랫부분에 번들 ID를 직접 지정합니다 ---
       vars:
         BUNDLE_ID: "com.nanoset.LuckyTenCommandmentsFresh"
-      # --- 스크린샷에 설정된 그룹 이름을 사용합니다 ---
       groups:
         - supabase
         - appstore_credentials 
@@ -36,9 +34,7 @@ workflows:
 
     publishing:
       app_store_connect:
-        # --- 환경 변수에 설정된 이름과 정확히 일치시킵니다 ---
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER # 이름 수정
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER # 이 이름이 남아있는 변수와 일치합니다.
         private_key: $APP_STORE_CONNECT_PRIVATE_KEY
-
         submit_to_testflight: true
