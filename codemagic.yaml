@@ -1,27 +1,28 @@
-# Codemagic 워크플로우 설정 - 최종 단순화 버전
+# Codemagic 워크플로우 설정 - 최종 수정본
 workflows:
   ios-release:
     name: iOS Release Build
     max_build_duration: 60
     
-    # API 키 연동
     integrations:
       app_store_connect: LuckyTenAPI
 
-    # 빌드 환경
     environment:
       flutter: stable
       xcode: latest
       cocoapods: default
       groups:
-        - supabase
-        - appstore_credentials 
+        - supabase 
 
-    # 빌드 스크립트
     scripts:
-     #   - name: Clean Xcode signing settings
-     #   script: | 
-     #     xcode-project remove-code-signing
+      - name: Force remove Xcode code signing settings
+        script: | 
+          # Xcode 프로젝트 파일을 직접 찾아 서명 관련 설정을 강제로 제거합니다.
+          PROJECT_FILE=$(find ios -name "project.pbxproj")
+          sed -i.bak 's/ProvisioningStyle = Manual;/ProvisioningStyle = Automatic;/g' $PROJECT_FILE
+          sed -i.bak 's/PROVISIONING_PROFILE_SPECIFIER = ".*";//g' $PROJECT_FILE
+          sed -i.bak '/"CODE_SIGN_IDENTITY\[sdk=iphoneos\*\]"/d' $PROJECT_FILE
+          echo "Force-removed Xcode signing settings."
       - name: Set up .env file
         script: | 
           echo "SUPABASE_URL=$SUPABASE_URL" > .env
@@ -33,15 +34,9 @@ workflows:
         script: | 
           flutter build ipa --release
 
-    # 빌드 결과물
     artifacts:
       - build/ios/ipa/*.ipa
 
-    # 서명 및 배포 (오류를 수정한 최종 버전)
     publishing:
-      # 이 블록 하나로 서명과 업로드를 모두 처리합니다.
       app_store_connect:
-        auth: integration
-        # 인증은 integrations에 있는 API 키를 자동으로 상속받아 사용합니다.
-        # 따라서 추가적인 인증 정보가 필요 없습니다.
         submit_to_testflight: true
