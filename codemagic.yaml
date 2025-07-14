@@ -32,9 +32,5 @@ workflows:
 
     publishing:
       app_store_connect:
-        # --- 환경 변수에서 인증 정보를 직접 가져와 사용 ---
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-        key_id: $APP_STORE_CONNECT_KEY_ID
-        private_key: $APP_STORE_CONNECT_PRIVATE_KEY
-
+        integration: LuckyTenAPI
         submit_to_testflight: true
