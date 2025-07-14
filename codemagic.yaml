@@ -1,43 +1,16 @@
-# Codemagic 워크플로우 설정 - 최종 수정본
 workflows:
   ios-release:
-    name: iOS Release Build
-    max_build_duration: 60
-
+    name: iOS Build Test
     environment:
       flutter: stable
       xcode: latest
       cocoapods: default
-      vars:
-        BUNDLE_ID: "com.nanoset.LuckyTenCommandmentsFresh"
-      groups:
-        - supabase
-        - codemagic_secrets # APP_STORE_PASSWORD가 포함된 그룹
-
     scripts:
-      - name: Clean Xcode signing settings
-        script: | 
-          xcode-project remove-code-signing
-      - name: Set up .env file
-        script: | 
-          echo "SUPABASE_URL=$SUPABASE_URL" > .env
-          echo "SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY" >> .env
       - name: Install dependencies
         script: | 
           flutter pub get
-      - name: Build IPA with release mode
+      - name: Run build command
         script: | 
-          flutter build ipa --release --build-name=1.0.0 --build-number=1
-
+          flutter build ios --release --no-codesign
     artifacts:
       - build/ios/ipa/*.ipa
-
-    # --- 이 아랫부분이 Apple ID/앱 암호 방식으로 변경된 최종 publishing 섹션입니다 ---
-    publishing:
-      app_store_connect:
-        # 1. 인증 정보: API 키 대신 Apple ID와 앱 암호를 직접 사용합니다.
-        apple_id: nanoset@naver.com
-        password: "@env:APP_STORE_PASSWORD" 
-
-        # 2. TestFlight 업로드 설정
-        submit_to_testflight: true
