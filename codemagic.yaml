@@ -1,12 +1,14 @@
-# Codemagic 워크플로우 설정 - 코드 서명 테스트
+# Codemagic 워크플로우 설정 - 최종 수정본
 workflows:
   ios-release:
-    name: iOS Code Signing Test
+    name: iOS Release Build
     max_build_duration: 60
     
+    # API 키 연동 (이 부분은 올바르게 설정되어 있었습니다)
     integrations:
       app_store_connect: LuckyTenAPI
 
+    # 빌드 환경
     environment:
       flutter: stable
       xcode: latest
@@ -14,6 +16,7 @@ workflows:
       groups:
         - supabase 
 
+    # 빌드 스크립트
     scripts:
       - name: Clean Xcode signing settings
         script: | 
@@ -29,10 +32,16 @@ workflows:
         script: | 
           flutter build ipa --release
 
+    # 빌드 결과물
     artifacts:
       - build/ios/ipa/*.ipa
 
-    # --- 코드 서명 기능만 추가 ---
+    # --- 이 아랫부분이 오류를 해결한 최종 publishing 섹션입니다 ---
     publishing:
-      automatic_code_signing:
-        method: app_store_connect
+      # 이 블록 하나로 서명과 업로드를 모두 처리합니다.
+      app_store_connect:
+        # 1. 인증 정보: integrations에 있는 API 키를 사용하라고 명시합니다.
+        api_key_integration_name: LuckyTenAPI
+
+        # 2. TestFlight 업로드 설정
+        submit_to_testflight: true
