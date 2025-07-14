@@ -1,19 +1,22 @@
-# Codemagic 워크플로우 설정 - 최종 완성본
+# Codemagic 워크플로우 설정 - 최종 수정본
 workflows:
   ios-release:
     name: iOS Release Build
     max_build_duration: 60
+    
+    # 1. API 키 연동 (이 부분은 올바르게 설정되어 있었습니다)
     integrations:
       app_store_connect: LuckyTenAPI
 
+    # 2. 빌드 환경
     environment:
       flutter: stable
       xcode: latest
       cocoapods: default
       groups:
-        - supabase          # Supabase 키들이 포함된 그룹
-        - codemagic_secrets # APP_STORE_PASSWORD가 포함된 그룹
+        - supabase # Supabase 키 그룹
 
+    # 3. 빌드 스크립트
     scripts:
       - name: Clean Xcode signing settings
         script: | 
@@ -29,11 +32,17 @@ workflows:
         script: | 
           flutter build ipa --release
 
+    # 4. 빌드 결과물
     artifacts:
       - build/ios/ipa/*.ipa
 
+    # 5. 서명 및 배포 (오류를 수정한 최종 버전)
     publishing:
+      # 자동 코드 서명 방식 지정
+      automatic_code_signing:
+        method: app_store_connect
+
+      # App Store Connect에 업로드
+      # 인증은 integrations에 있는 API 키를 자동으로 사용합니다.
       app_store_connect:
-        api_key_integration_name: LuckyTenAPI
-        apple_id: nanoset@naver.com
-        password: "@env:APP_STORE_PASSWORD"
+        submit_to_testflight: true
