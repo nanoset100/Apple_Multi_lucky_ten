@@ -14,7 +14,8 @@ workflows:
       xcode: latest
       cocoapods: default
       groups:
-        - supabase 
+        - supabase
+        - appstore_credentials 
 
     # 빌드 스크립트
     scripts:
@@ -40,6 +41,7 @@ workflows:
     publishing:
       # 이 블록 하나로 서명과 업로드를 모두 처리합니다.
       app_store_connect:
+        auth: integration
         # 인증은 integrations에 있는 API 키를 자동으로 상속받아 사용합니다.
         # 따라서 추가적인 인증 정보가 필요 없습니다.
         submit_to_testflight: true
