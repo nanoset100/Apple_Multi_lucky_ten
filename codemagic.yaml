@@ -1,16 +1,42 @@
 workflows:
   ios-release:
-    name: iOS Build Test
+    name: iOS Release Build
+    max_build_duration: 60
+    
+    # 1. API 키 연동 설정
+    integrations:
+      app_store_connect: LuckyTenAPI
+
+    # 2. 빌드 환경 설정
     environment:
       flutter: stable
       xcode: latest
       cocoapods: default
+      groups:
+        - supabase # Supabase 등 외부 키가 있다면 여기에 그룹 이름 명시
+
+    # 3. 빌드 스크립트
     scripts:
+      - name: Set up .env file
+        script: | 
+          # .env 파일이 필요하다면 이 스크립트를 유지하세요.
+          # echo "$ENV_FILE" > .env
+          echo "Skipping .env file creation for now" # .env 파일이 없다면 이 줄을 사용
       - name: Install dependencies
         script: | 
           flutter pub get
-      - name: Run build command
+      - name: Build IPA with release mode
         script: | 
-          flutter build ios --release --no-codesign
+          flutter build ipa --release
+
+    # 4. 빌드 결과물 경로 설정
     artifacts:
       - build/ios/ipa/*.ipa
+
+    # 5. 서명 및 배포 설정
+    publishing:
+      automatic_code_signing:
+        method: app_store_connect
+      app_store_connect:
+        api_key_integration_name: LuckyTenAPI
+        submit_to_testflight: true
